@@ -10,6 +10,7 @@ import UIKit
 class ReminderListViewController: UICollectionViewController {
     
     var dataSource: DataSource?
+    var reminders: [Reminder] = Reminder.sampleData
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,17 +24,13 @@ class ReminderListViewController: UICollectionViewController {
         // Connect the diffable ("actualitzable") data source to the collection view
         // A diffable data source stores a list of identifiers that represents the identities of the items in the collection view.
         dataSource = DataSource(collectionView: collectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: String) in
+            (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: Reminder.ID) in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
         
         var snapshot = Snapshot()
         snapshot.appendSections([0])
-        var reminderTitles = [String]()
-        for reminder in Reminder.sampleData {
-            reminderTitles.append(reminder.title)
-        }
-        snapshot.appendItems(reminderTitles)
+        snapshot.appendItems(reminders.map { $0.id} )
         dataSource?.apply(snapshot)
         
         // Assign the data source to the collection view

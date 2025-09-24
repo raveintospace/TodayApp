@@ -21,6 +21,7 @@ class ReminderListViewController: UICollectionViewController {
         let cellRegistration = UICollectionView.CellRegistration(handler: cellRegistrationHandler)
         
         // Connect the diffable ("actualitzable") data source to the collection view
+        // A diffable data source stores a list of identifiers that represents the identities of the items in the collection view.
         dataSource = DataSource(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: String) in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)

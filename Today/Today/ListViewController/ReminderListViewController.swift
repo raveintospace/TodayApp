@@ -8,12 +8,6 @@
 import UIKit
 
 class ReminderListViewController: UICollectionViewController {
-
-    // Type aliases are helpful for referring to an existing type with a name that’s more expressive.
-    typealias DataSource = UICollectionViewDiffableDataSource<Int, String>
-    
-    // A snapshot represents the state of data at a specific point in time. Used to display data
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
     
     var dataSource: DataSource?
     
@@ -24,13 +18,7 @@ class ReminderListViewController: UICollectionViewController {
         collectionView.collectionViewLayout = listLayout
         
         // Set the cell’s content and appearance
-        let cellRegistration = UICollectionView.CellRegistration {
-            (cell: UICollectionViewListCell, indexPath: IndexPath, itemIdentifier: String) in
-            let reminder = Reminder.sampleData[indexPath.item]
-            var contentConfiguration = cell.defaultContentConfiguration()
-            contentConfiguration.text = reminder.title
-            cell.contentConfiguration = contentConfiguration
-        }
+        let cellRegistration = UICollectionView.CellRegistration(handler: cellRegistrationHandler)
         
         // Connect the diffable ("actualitzable") data source to the collection view
         dataSource = DataSource(collectionView: collectionView) {

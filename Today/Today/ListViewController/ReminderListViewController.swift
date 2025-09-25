@@ -46,6 +46,7 @@ class ReminderListViewController: UICollectionViewController {
         
         // Set the highlighted segment
         listStyleSegmentedControl.selectedSegmentIndex = listStyle.rawValue
+        listStyleSegmentedControl.addTarget(self, action: #selector(didChangeListStyle(_:)), for: .valueChanged)
         navigationItem.titleView = listStyleSegmentedControl
         
         updateSnapshot()

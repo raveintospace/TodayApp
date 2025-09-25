@@ -37,4 +37,10 @@ extension ReminderListViewController {
     @objc func didCancelAdd(_ sender: UIBarButtonItem) {
         dismiss(animated: true)
     }
+    
+    /// Filter reminders by date when user uses the UI
+    @objc func didChangeListStyle(_ sender: UISegmentedControl) {
+        listStyle = ReminderListStyle(rawValue: sender.selectedSegmentIndex) ?? .today
+        updateSnapshot()
+    }
 }

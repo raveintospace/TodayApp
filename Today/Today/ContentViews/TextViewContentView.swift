@@ -11,6 +11,7 @@ class TextViewContentView: UIView, UIContentView {
     
     struct Configuration: UIContentConfiguration {
         var text: String? = ""
+        var onChange: (String) -> Void = { _ in }
         
         func makeContentView() -> any UIView & UIContentView {
             return TextViewContentView(self)
@@ -34,6 +35,7 @@ class TextViewContentView: UIView, UIContentView {
         super.init(frame: .zero)
         addPinnedSubview(textView, height: 200)
         textView.backgroundColor = nil
+        textView.delegate = self
         textView.font = UIFont.preferredFont(forTextStyle: .body)
     }
     
@@ -50,5 +52,12 @@ class TextViewContentView: UIView, UIContentView {
 extension UICollectionViewListCell {
     func textViewConfiguration() -> TextViewContentView.Configuration {
         TextViewContentView.Configuration()
+    }
+}
+
+extension TextViewContentView: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        guard let configuration = configuration as? TextViewContentView.Configuration else { return }
+        configuration.onChange(textView.text)
     }
 }

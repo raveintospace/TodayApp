@@ -50,7 +50,10 @@ class ReminderListViewController: UICollectionViewController {
     
     private func pushDetailViewForReminder(withId id: Reminder.ID) {
         let reminder = reminder(withId: id)
-        let viewController = ReminderViewController(reminder: reminder)
+        let viewController = ReminderViewController(reminder: reminder) { [weak self] reminder in
+            self?.updateReminder(reminder) // update the array of reminders in data source with the edited reminder
+            self?.updateSnapshot(reloading: [reminder.id]) // update UI to reflect the edited reminder
+        }
         navigationController?.pushViewController(viewController, animated: true)
     }
 

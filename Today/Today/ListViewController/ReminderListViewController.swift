@@ -50,6 +50,7 @@ class ReminderListViewController: UICollectionViewController {
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .grouped)
         listConfiguration.showsSeparators = false
         listConfiguration.backgroundColor = .clear
+        listConfiguration.trailingSwipeActionsConfigurationProvider = makeSwipeActions
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
     }
     
@@ -60,6 +61,21 @@ class ReminderListViewController: UICollectionViewController {
             self?.updateSnapshot(reloading: [reminder.id]) // update UI to reflect the edited reminder
         }
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    // Generates a swipe action configuration for each item in the list.
+    private func makeSwipeActions(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
+        
+        // Retrieve the item identifier from the data source
+        guard let indexPath, let id = dataSource?.itemIdentifier(for: indexPath) else { return nil }
+        
+        let deleteActionTitle = NSLocalizedString("Delete", comment: "Delete action title")
+        let deleteAction = UIContextualAction(style: .destructive, title: deleteActionTitle) { [weak self] _, _, completion in
+            self?.deleteReminder(withId: id)
+            self?.updateSnapshot()
+            completion(false)   // As we update the UI, we don't need to animate the cell disappearance
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 
 }

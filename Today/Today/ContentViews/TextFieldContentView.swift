@@ -20,7 +20,7 @@ class TextFieldContentView: UIView, UIContentView {
     let textField = UITextField()
     var configuration: UIContentConfiguration {
         didSet {
-            configure(configuration: configuration) // Update UI when the configuration changes
+            configure(configuration: configuration) // Update UI when the configuration object changes
         }
     }
     

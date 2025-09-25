@@ -20,7 +20,7 @@ class TextViewContentView: UIView, UIContentView {
     let textView = UITextView()
     var configuration: UIContentConfiguration {
         didSet {
-            configure(configuration: configuration) // Update UI when the configuration changes
+            configure(configuration: configuration) // Update UI when the configuration object changes
         }
     }
     

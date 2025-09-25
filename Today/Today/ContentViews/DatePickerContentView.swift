@@ -20,7 +20,7 @@ class DatePickerContentView: UIView, UIContentView {
     let datePicker = UIDatePicker()
     var configuration: UIContentConfiguration {
         didSet {
-            configure(configuration: configuration)
+            configure(configuration: configuration) // Update UI when the configuration object changes
         }
     }
     

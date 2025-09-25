@@ -62,32 +62,29 @@ class ReminderViewController: UICollectionViewController {
             
             // Configure the title (header) for every section
         case (_, .header(let title)):
-            var contentConfiguration = cell.defaultContentConfiguration()
-            contentConfiguration.text = title
-            cell.contentConfiguration = contentConfiguration
+            cell.contentConfiguration = headerConfiguration(for: cell, with: title)
             
             // Configure the rows (_) in the view section
         case (.view, _):
-            var contentConfiguration = cell.defaultContentConfiguration()
-            contentConfiguration.text = text(for: row)
-            contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: row.textStyle)
-            contentConfiguration.image = row.image
-            cell.contentConfiguration = contentConfiguration
+            cell.contentConfiguration = defaultConfiguration(for: cell, at: row)
+            
+            // Configure the reminder title after being edited
+        case (.title, .editableText(let title)):
+            cell.contentConfiguration = titleConfiguration(for: cell, with: title)
+            
+            // Configure the reminder date after being edited
+        case (.date, .editableDate(let date)):
+            cell.contentConfiguration = dateConfiguration(for: cell, with: date)
+            
+            // Configure the reminder notes after being edited, they are optional
+        case (.notes, .editableText(let notes)):
+            cell.contentConfiguration = notesConfiguration(for: cell, with: notes)
+        
         default:
             fatalError("Unexpected combination of section and row")
         }
         
         cell.tintColor = .todayPrimaryTint
-    }
-    
-    func text(for row: Row) -> String? {
-        switch row {
-        case .date: return reminder.dueDate.dayText
-        case .notes: return reminder.notes
-        case .time: return reminder.dueDate.formatted(date: .omitted, time: .shortened)
-        case .title: return reminder.title
-        default: return nil
-        }
     }
     
     private func updateSnapshotForViewing() {
@@ -100,9 +97,9 @@ class ReminderViewController: UICollectionViewController {
     private func updateSnapshotForEditing() {
         var snapShot = Snapshot()
         snapShot.appendSections([.title, .date, .notes])
-        snapShot.appendItems([.header(Section.title.name)], toSection: .title)
-        snapShot.appendItems([.header(Section.date.name)], toSection: .date)
-        snapShot.appendItems([.header(Section.notes.name)], toSection: .notes)
+        snapShot.appendItems([.header(Section.title.name), .editableText(reminder.title)], toSection: .title)
+        snapShot.appendItems([.header(Section.date.name), .editableDate(reminder.dueDate)], toSection: .date)
+        snapShot.appendItems([.header(Section.notes.name), .editableText(reminder.notes)], toSection: .notes)
         dataSource?.apply(snapShot)
     }
     

@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		34D8AD7F2E841F9800B6CAE7 /* Exceptions for "Today" folder in "Today" target */ = {
+		3491CC732E8532ED00169D3D /* Exceptions for "Today" folder in "Today" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -21,10 +21,10 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		34D8AD6F2E841F9700B6CAE7 /* Today */ = {
+		3491CC662E8532ED00169D3D /* Today */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				34D8AD7F2E841F9800B6CAE7 /* Exceptions for "Today" folder in "Today" target */,
+				3491CC732E8532ED00169D3D /* Exceptions for "Today" folder in "Today" target */,
 			);
 			path = Today;
 			sourceTree = "<group>";
@@ -45,7 +45,7 @@
 		34D8AD642E841F9700B6CAE7 = {
 			isa = PBXGroup;
 			children = (
-				34D8AD6F2E841F9700B6CAE7 /* Today */,
+				3491CC662E8532ED00169D3D /* Today */,
 				34D8AD6E2E841F9700B6CAE7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,7 +74,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				34D8AD6F2E841F9700B6CAE7 /* Today */,
+				3491CC662E8532ED00169D3D /* Today */,
 			);
 			name = Today;
 			packageProductDependencies = (

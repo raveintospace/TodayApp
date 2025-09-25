@@ -106,6 +106,3 @@ extension ReminderListViewController {
     }
     
 }
-
-
-// Thursday lesson: https://developer.apple.com/tutorials/app-dev-training/displaying-reminder-details

@@ -33,12 +33,25 @@ class ReminderListViewController: UICollectionViewController {
         // Assign the data source to the collection view
         collectionView.dataSource = dataSource
     }
+    
+    // When tapping the cell, it is not selected (false), it navigates to DetailView
+    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let id = reminders[indexPath.item].id
+        pushDetailViewForReminder(withId: id)
+        return false
+    }
 
     private func listLayout() -> UICollectionViewCompositionalLayout {
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .grouped)
         listConfiguration.showsSeparators = false
         listConfiguration.backgroundColor = .clear
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
+    }
+    
+    private func pushDetailViewForReminder(withId id: Reminder.ID) {
+        let reminder = reminder(withId: id)
+        let viewController = ReminderViewController(reminder: reminder)
+        navigationController?.pushViewController(viewController, animated: true)
     }
 
 }

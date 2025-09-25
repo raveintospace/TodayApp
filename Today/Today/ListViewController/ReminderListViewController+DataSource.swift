@@ -63,6 +63,11 @@ extension ReminderListViewController {
         cell.backgroundConfiguration = backgroundConfiguration
     }
     
+    /// Adds a new reminder to data source
+    func addReminder(_ reminder: Reminder) {
+        reminders.append(reminder)
+    }
+    
     // Adds a button to our cell
     private func doneButtonConfiguration(for reminder: Reminder) -> UICellAccessory.CustomViewConfiguration {
         let symbolName = reminder.isComplete ? "circle.fill" : "circle"

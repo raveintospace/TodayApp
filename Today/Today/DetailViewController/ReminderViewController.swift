@@ -9,9 +9,9 @@ import UIKit
 
 class ReminderViewController: UICollectionViewController {
     
-    // Int for section numbers / Row for items in the list
-    private typealias DataSource = UICollectionViewDiffableDataSource<Int, Row>
-    private typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Row>
+    // Section for section numbers / Row for items in the list
+    private typealias DataSource = UICollectionViewDiffableDataSource<Section, Row>
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Row>
     
     var reminder: Reminder
     private var dataSource: DataSource?
@@ -20,6 +20,7 @@ class ReminderViewController: UICollectionViewController {
         self.reminder = reminder
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         listConfiguration.showsSeparators = false
+        listConfiguration.headerMode = .firstItemInSection
         let listLayout = UICollectionViewCompositionalLayout.list(using: listConfiguration)
         super.init(collectionViewLayout: listLayout)
     }
@@ -39,16 +40,43 @@ class ReminderViewController: UICollectionViewController {
         
         navigationItem.style = .navigator
         navigationItem.title = NSLocalizedString("Reminder", comment: "Reminder view controller title")
+        navigationItem.rightBarButtonItem = editButtonItem
         
-        updateSnapshot()
+        updateSnapshotForViewing()
     }
     
-    func cellRegistrationHandler(cell: UICollectionViewListCell, indePath: IndexPath, row: Row) {
-        var contentConfiguration = cell.defaultContentConfiguration()
-        contentConfiguration.text = text(for: row)
-        contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: row.textStyle)
-        contentConfiguration.image = row.image
-        cell.contentConfiguration = contentConfiguration
+    // Called when the user taps the Edit / Done button.
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        if editing {
+            updateSnapshotForEditing()
+        } else {
+            updateSnapshotForViewing()
+        }
+    }
+    
+    func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, row: Row) {
+        let section = section(for: indexPath)
+        
+        switch (section, row) {
+            
+            // Configure the title (header) for every section
+        case (_, .header(let title)):
+            var contentConfiguration = cell.defaultContentConfiguration()
+            contentConfiguration.text = title
+            cell.contentConfiguration = contentConfiguration
+            
+            // Configure the rows (_) in the view section
+        case (.view, _):
+            var contentConfiguration = cell.defaultContentConfiguration()
+            contentConfiguration.text = text(for: row)
+            contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: row.textStyle)
+            contentConfiguration.image = row.image
+            cell.contentConfiguration = contentConfiguration
+        default:
+            fatalError("Unexpected combination of section and row")
+        }
+        
         cell.tintColor = .todayPrimaryTint
     }
     
@@ -58,13 +86,33 @@ class ReminderViewController: UICollectionViewController {
         case .notes: return reminder.notes
         case .time: return reminder.dueDate.formatted(date: .omitted, time: .shortened)
         case .title: return reminder.title
+        default: return nil
         }
     }
     
-    private func updateSnapshot() {
+    private func updateSnapshotForViewing() {
         var snapShot = Snapshot()
-        snapShot.appendSections([0])
-        snapShot.appendItems([Row.title, Row.date, Row.time, Row.notes], toSection: 0)
+        snapShot.appendSections([.view])
+        snapShot.appendItems([Row.header(""), Row.title, Row.date, Row.time, Row.notes], toSection: .view)
         dataSource?.apply(snapShot)
+    }
+    
+    private func updateSnapshotForEditing() {
+        var snapShot = Snapshot()
+        snapShot.appendSections([.title, .date, .notes])
+        snapShot.appendItems([.header(Section.title.name)], toSection: .title)
+        snapShot.appendItems([.header(Section.date.name)], toSection: .date)
+        snapShot.appendItems([.header(Section.notes.name)], toSection: .notes)
+        dataSource?.apply(snapShot)
+    }
+    
+    /// Returns the section for a row passed to it.
+    // In view mode, all items are displayed in section 0. In editing mode, the title, date, and notes are separated into sections 1, 2 and 3.
+    private func section(for indexPath: IndexPath) -> Section {
+        let sectionNumber = isEditing ? indexPath.section + 1 : indexPath.section
+        guard let section = Section(rawValue: sectionNumber) else {
+            fatalError("Unable to find matching section")
+        }
+        return section
     }
 }

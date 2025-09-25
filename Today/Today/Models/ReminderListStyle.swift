@@ -12,6 +12,14 @@ enum ReminderListStyle: Int {
     case future     // rawValue is 1
     case all        // rawValue is 2
     
+    var name: String {
+        switch self {
+        case .today: return NSLocalizedString("Today", comment: "Today style name")
+        case .future: return NSLocalizedString("Future", comment: "Future style name")
+        case .all: return NSLocalizedString("All", comment: "All style name")
+        }
+    }
+    
     func shouldInclude(date: Date) -> Bool {
         let isInToday = Locale.current.calendar.isDateInToday(date)
         

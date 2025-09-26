@@ -8,7 +8,12 @@
 import UIKit
 
 class ProgressHeaderView: UICollectionReusableView {
+    
+    // Specifies a type of supplementary view that the collection view can present.
+    static var elementKind: String { UICollectionView.elementKindSectionHeader }
+    
     var progress: CGFloat = 0 {
+        
         // Updates the height constraint of the lower view when the value of progress changes
         didSet {
             heightConstraint?.constant = progress * bounds.height
@@ -82,6 +87,3 @@ class ProgressHeaderView: UICollectionReusableView {
  Instead of deleting views when a user scrolls them out of the visible bounds, the UICollectionReusableView class keeps views in the reuse queue.
  They are ideal for headers or footers
  */
-
-
-// Friday - Section 3:  https://developer.apple.com/tutorials/app-dev-training/creating-a-progress-view

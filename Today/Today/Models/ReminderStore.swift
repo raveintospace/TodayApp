@@ -53,6 +53,14 @@ final class ReminderStore {
             throw TodayError.unknown
         }
     }
+    
+    /// Query a calendar item that matches the reminder id
+    private func read(with id: Reminder.ID) throws -> EKReminder {
+        guard let ekReminder = ekStore.calendarItem(withIdentifier: id) as? EKReminder else {
+            throw TodayError.failedReadingCalendarItem
+        }
+        return ekReminder
+    }
 }
 
 /*

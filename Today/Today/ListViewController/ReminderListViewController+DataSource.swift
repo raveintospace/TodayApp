@@ -148,8 +148,14 @@ extension ReminderListViewController {
     
     /// Updates the corresponding reminder in array with the contents of the updated reminder.
     func updateReminder(_ reminder: Reminder) {
-        let index = reminders.indexOfReminder(withId: reminder.id)
-        reminders[index] = reminder
+        do {
+            try reminderStore.save(reminder)
+            let index = reminders.indexOfReminder(withId: reminder.id)
+            reminders[index] = reminder
+        } catch TodayError.accessDenied {
+        } catch {
+            showError(error) // for other error cases
+        }
     }
     
     /// Sets a reminder as completed

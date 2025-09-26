@@ -61,8 +61,29 @@ final class ReminderStore {
         }
         return ekReminder
     }
+    
+    /// Save a reminder from Today
+    @discardableResult
+    func save(_ reminder: Reminder) throws -> Reminder.ID {
+        guard isAvailable else {
+            throw TodayError.accessDenied
+        }
+        let ekReminder: EKReminder
+        do {
+            ekReminder = try read(with: reminder.id)
+        } catch { // we reach it if the user is saving a new reminder instead of editing an existing one
+            ekReminder = EKReminder(eventStore: ekStore)
+        }
+        ekReminder.update(using: reminder, in: ekStore)
+        try ekStore.save(ekReminder, commit: true)
+        return ekReminder.calendarItemIdentifier
+    }
 }
 
 /*
- To persist reminders data with a single instace (singleton) of ReminderStore class
+ This final class persists reminders data with a single instace (singleton) of ReminderStore class
+ */
+
+/*
+ @discardableResult instructs the compiler to omit warnings in cases where the call site doesn’t capture the return value.
  */

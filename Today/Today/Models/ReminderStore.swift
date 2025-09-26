@@ -62,7 +62,7 @@ final class ReminderStore {
         return ekReminder
     }
     
-    /// Save a reminder from Today, works with new ones and existing ones
+    /// Save a reminder from Today to the EKStore, works with new ones and existing ones
     @discardableResult
     func save(_ reminder: Reminder) throws -> Reminder.ID {
         guard isAvailable else {
@@ -77,6 +77,14 @@ final class ReminderStore {
         ekReminder.update(using: reminder, in: ekStore)
         try ekStore.save(ekReminder, commit: true)
         return ekReminder.calendarItemIdentifier
+    }
+    
+    func remove(with id: Reminder.ID) throws {
+        guard isAvailable else {
+            throw TodayError.accessDenied
+        }
+        let ekReminder = try read(with: id)
+        try ekStore.remove(ekReminder, commit: true)
     }
 }
 

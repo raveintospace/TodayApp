@@ -68,7 +68,7 @@ extension ReminderListViewController {
         cell.backgroundConfiguration = backgroundConfiguration
     }
     
-    /// Adds a new reminder to data source
+    /// Adds a new reminder to data source & ekStore
     func addReminder(_ reminder: Reminder) {
         var reminder = reminder
         do {
@@ -82,10 +82,16 @@ extension ReminderListViewController {
         
     }
     
-    /// Removes a reminder on data source
+    /// Removes a reminder on data source & ekStore
     func deleteReminder(withId id: Reminder.ID) {
-        let index = reminders.indexOfReminder(withId: id)
-        reminders.remove(at: index)
+        do {
+            try reminderStore.remove(with: id)
+            let index = reminders.indexOfReminder(withId: id)
+            reminders.remove(at: index)
+        } catch TodayError.accessDenied {
+        } catch {
+            showError(error)
+        }
     }
     
     /// Set up for our shared reminder store
@@ -149,7 +155,7 @@ extension ReminderListViewController {
     /// Updates the corresponding reminder in array with the contents of the updated reminder.
     func updateReminder(_ reminder: Reminder) {
         do {
-            try reminderStore.save(reminder)
+            try reminderStore.save(reminder) // update reminder on ekStore
             let index = reminders.indexOfReminder(withId: reminder.id)
             reminders[index] = reminder
         } catch TodayError.accessDenied {
@@ -165,5 +171,4 @@ extension ReminderListViewController {
         updateReminder(reminder)
         updateSnapshot(reloading: [id]) // to update the UI with the updated data from data source
     }
-    
 }

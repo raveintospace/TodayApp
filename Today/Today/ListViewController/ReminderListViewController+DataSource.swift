@@ -36,6 +36,7 @@ extension ReminderListViewController {
         }
         
         dataSource?.apply(snapshot)
+        headerView?.progress = progress
     }
     
     // Cell configuration, called on VC

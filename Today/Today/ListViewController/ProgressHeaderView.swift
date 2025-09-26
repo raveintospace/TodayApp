@@ -41,6 +41,7 @@ class ProgressHeaderView: UICollectionReusableView {
     // Override to adjust the corner radius of ProgressHeaderView whenever its size changes
     override func layoutSubviews() {
         super.layoutSubviews()
+        heightConstraint?.constant = progress * bounds.height
         containerView.layer.masksToBounds = true
         containerView.layer.cornerRadius = 0.5 * containerView.bounds.width     // circle shape
     }

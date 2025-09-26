@@ -10,7 +10,7 @@ import UIKit
 class ReminderListViewController: UICollectionViewController {
     
     var dataSource: DataSource?
-    var reminders: [Reminder] = Reminder.sampleData
+    var reminders: [Reminder] = []
     var listStyle: ReminderListStyle = .today
     
     var filteredReminders: [Reminder] {
@@ -73,6 +73,9 @@ class ReminderListViewController: UICollectionViewController {
         
         // Assign the data source to the collection view
         collectionView.dataSource = dataSource
+        
+        // Get reminders from other apps
+        prepareReminderStore()
     }
     
     // When tapping the cell, it is not selected (false), it navigates to DetailView
@@ -142,7 +145,7 @@ class ReminderListViewController: UICollectionViewController {
     }
     
     // Shows errors for the known issues
-    private func showError(_ error: Error) {
+    func showError(_ error: Error) {
         let alertTitle = NSLocalizedString("Error", comment: "Error alert title")
         let alert = UIAlertController(title: alertTitle, message: error.localizedDescription, preferredStyle: .alert)
         let actionTitle = NSLocalizedString("OK", comment: "Alert OK button title")

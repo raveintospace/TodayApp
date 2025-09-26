@@ -62,7 +62,7 @@ final class ReminderStore {
         return ekReminder
     }
     
-    /// Save a reminder from Today
+    /// Save a reminder from Today, works with new ones and existing ones
     @discardableResult
     func save(_ reminder: Reminder) throws -> Reminder.ID {
         guard isAvailable else {

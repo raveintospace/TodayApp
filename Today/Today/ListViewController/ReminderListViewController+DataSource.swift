@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import EventKit
 
 // Contains all the data source behaviors of ReminderListViewController.
 extension ReminderListViewController {
@@ -84,6 +85,10 @@ extension ReminderListViewController {
             do {
                 try await reminderStore.requestAccess()
                 reminders = try await reminderStore.readAll()
+                
+                // Register ReminderListViewController as observer of notifications
+                NotificationCenter.default.addObserver(self, selector: #selector(eventStoreChanged(_:)), name: .EKEventStoreChanged, object: nil)
+                
             } catch TodayError.accessDenied, TodayError.accessRestricted {
                 #if DEBUG
                 reminders = Reminder.sampleData
@@ -94,6 +99,15 @@ extension ReminderListViewController {
             updateSnapshot()
         }
     }
+    
+    /// Reloads all reminders from EventKit.
+    func reminderStoreChanged() {
+        Task {
+            reminders = try await reminderStore.readAll()
+            updateSnapshot()
+        }
+    }
+
     
     // Adds a button to our cell
     private func doneButtonConfiguration(for reminder: Reminder) -> UICellAccessory.CustomViewConfiguration {

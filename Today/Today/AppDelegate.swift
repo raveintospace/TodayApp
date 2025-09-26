@@ -1,7 +1,7 @@
 //
 //  AppDelegate.swift
 //  Today
-//
+//  https://developer.apple.com/tutorials/app-dev-training/getting-started-with-today
 //  Created by Uri on 24/9/25.
 //
 
